@@ -320,14 +320,16 @@ document.getElementById('btnFile').addEventListener('click',()=>document.getElem
 document.getElementById('fileInput').addEventListener('change',async ev=>{
   const f=ev.target.files[0]; if(f) loadPsdBuffer(await f.arrayBuffer());
 });
-document.getElementById('btnSample').addEventListener('click',async ()=>{
+async function loadSamplePsd(){
   try{
     dropStatus.textContent='sample.psd を取得中…';
     const r=await fetch('sample.psd');
     if(!r.ok) throw new Error('sample.psd が見つかりません（HTTP '+r.status+'）');
     loadPsdBuffer(await r.arrayBuffer());
   }catch(err){ dropStatus.textContent='エラー: '+err.message; }
-});
+}
+document.getElementById('btnSample').addEventListener('click',loadSamplePsd);
+loadSamplePsd();
 ['dragover','dragenter'].forEach(ev=>window.addEventListener(ev,e=>{ e.preventDefault(); dropEl.classList.add('dragover'); }));
 ['dragleave','drop'].forEach(ev=>window.addEventListener(ev,e=>{ e.preventDefault(); dropEl.classList.remove('dragover'); }));
 window.addEventListener('drop',async e=>{
